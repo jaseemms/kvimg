@@ -1,0 +1,3 @@
+title=KvImg
+author=Jaseem M S
+orientation=portrait

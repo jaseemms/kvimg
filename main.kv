@@ -1,0 +1,119 @@
+#kivy 1.0
+
+#:import metrics kivy.metrics.Metrics
+
+<IconButton>:
+	always_release: True
+	size: '40 dp', '40 dp'
+	size_hint: [None, None]
+	allow_stretch: True
+	keep_ratio: False
+
+
+<MenuBar>:
+	orientation: 'lr-tb'
+
+	Button:
+		text: 'Internal Storage'
+		height: '60 dp'
+		padding: ['10 dp', '10 dp']
+		size_hint_y: None
+		background_color: [0, 0, 0, 0.1]
+		halign: 'left'
+		text_size: self.width, None
+		on_press: app.main_layout.toggle_menu_bar(storage_path="internal")
+
+
+<ImageBox>:
+	orientation: 'vertical'
+
+	Image:
+		id: image
+		allow_stretch: True
+
+	GridLayout:
+		cols: 3
+		height: '70 dp'
+		size_hint_y: None
+		spacing: (self.width - 200 * metrics.density) / 2
+		padding: ['40 dp', '5 dp']
+
+		IconButton:
+			on_press: app.main_layout.body_box.previous_image()
+			source: 'img/nav_left.png'
+			press_image: 'img/nav_left_pressed.png'
+
+		IconButton:
+			on_press: app.main_layout.body_box.hide_image()
+			source: 'img/close.png'
+			press_image: 'img/close_pressed.png'
+
+		IconButton:
+			on_press: app.main_layout.body_box.next_image()
+			source: 'img/nav_right.png'
+			press_image: 'img/nav_right_pressed.png'			
+
+
+<ImageButton>:
+	counter: 0
+	width: (app.image_grid.width - 5 * metrics.density * (app.image_grid.cols - 1))/ app.image_grid.cols
+	height: self.width
+	size_hint_y: None
+	size_hint_x: None
+	on_press: app.main_layout.body_box.show_image(self)
+	allow_stretch: True
+	keep_ratio: False
+	mipmap: True
+	nocache: True
+
+
+<ImageList>:
+	image_grid: image_grid.__self__
+
+	GridLayout:
+		id: image_grid
+		cols: int((self.width / metrics.density) // 150 + 1)
+		spacing: '5 dp'
+		size_hint_y: None
+		height: self.minimum_height			
+
+
+<MainLayout>:
+	orientation: 'vertical'
+	padding: '10 dp'
+	body_box: body_box.__self__
+	canvas.before:
+		Color:
+			rgba: 0.203921569, 0.22745098, 0.294117647, 1
+		Rectangle:
+			pos: self.pos
+			size: self.size
+
+	BoxLayout:
+		height: '60 dp'
+		padding: ['5 dp', '10 dp']
+		spacing: '20 dp'
+		size_hint: 1, None
+
+		IconButton:
+			size: '50 dp', '40 dp'
+			on_press: root.toggle_menu_bar()
+			source: 'img/menu.png'
+			press_image: 'img/menu_pressed.png'	
+
+		Label:
+			text_size: self.size
+    		halign: 'left'
+    		valign: 'middle'
+			text: 'KvImg'
+			bold: 1
+			font_size: '18 sp'
+			height: '40 dp'
+			size_hint: 1, None
+
+	BodyBox:
+		id: body_box
+		image_list: image_list.__self__
+
+		ImageList:
+			id: image_list
